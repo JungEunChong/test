@@ -7,8 +7,8 @@ void update_record();
 void delete_record();
 void list_record();
 void sort_record();
-void book_borrow();
-void book_return(); 
+void enrollment_date();
+void recent_visit(); 
 void search_name();
 void search_number();
 void load_file();
@@ -20,7 +20,7 @@ int main(){
 	m_init();
     int menu;
     while(1){
-        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort 7.borrow 8.return 9.Search(name) 10.Search(number) 11.load 12.save 0.Quit > ");
+        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort 7.enrollment date 8.recent visit 9.Search(name) 10.Search(number) 11.load 12.save 0.Quit > ");
         scanf("%d", &menu);
         printf("\n");
         switch(menu){
@@ -43,10 +43,10 @@ int main(){
 				sort_record();
 				break;
 	    	case 7:
-				book_borrow();	
+				enrollment_date();	
 				break;
 	    	case 8:
-				book_return();	
+				recent_visit();	
 				break;
             case 9: 
                 search_name();
@@ -103,7 +103,7 @@ void create_record()
 	scanf("%s", city);
 
 	m_create(name, phone, birthyear, city);
-
+	
 #ifdef DEBUG
 	printf("\nRecord is created!\n");
 #endif 
@@ -139,13 +139,47 @@ void read_record()
 
 void update_record()
 {
+	char name[20], phone[20], city[20];
+	char year[20];  
 
+	printf("Enter a name : ");
+	scanf("%s", name);
+
+	T_record* p = m_search_by_name(name);
+	if(p)
+	{
+		printf("Enter a updated info.\n");
+		printf("Phone : ");
+		scanf("%s", phone);
+		printf("Birth year : ");
+		scanf("%s", year);
+		printf("City : ");
+		scanf("%s", city);
+
+		m_update(p, phone, year, city);
+	}
+	else
+	{
+		printf("No such member!\n");
+	}
 }
 
 void delete_record()
 {
+	char name[20];
+	printf("Enter a name : ");
+	scanf("%s", name);
 
+	T_record* p = m_search_by_name(name);
+	if(p) {
+		m_delete(p);
+		printf("The record is deleted!\n");
+	}
+	else {
+		printf("No such member!\n");
+	}
 }
+
 void list_record()
 {
 	int size = m_count();
@@ -165,24 +199,84 @@ void list_record()
 }
 void sort_record()
 {
+	int size = m_count();
+	
+	printf("Sorted records.\n");
+	sort(size);
+}
+
+void enrollment_date()
+{
+	char name[20];
+
+	printf("Enter a name : ");
+	scanf("%s", name);
+
+	T_record * p = m_search_by_name(name);
+	
+	printf("%s's enrollment date is %s\n",name,p->enrollment_date);
 
 }
-void book_borrow()
+void recent_visit()
 {
+	time_t timer;
+	struct tm *t;
+	char name[20], s1[20], s2[20] ;
+	int month, day;
 
-}
-void book_return()
-{
+	timer = time(NULL);
+
+	t = localtime(&timer);
+
+	printf("Enter a name : ");
+	scanf("%s", name);
+
+	printf("%s's recent visit is %d, %d\n",name,t->tm_mon+1, t->tm_mday);
+	
+	month = t->tm_mon+1;
+	day = t->tm_mday;
+
+	sprintf(s1, "%d", month);
+	sprintf(s2, "%d", day);
+
+	r_create(name, s1);
 
 }
 void search_name()
 {
+	char name[20];
+	printf("Enter a name > ");
+	scanf("%s", name);
 
+	T_record* records[MAX_MEMBERS];
+	int size = m_get_all_by_name(records, name);
+	printf("%d records found.\n", size);
+	for(int i=0; i<size; i++)
+	{
+		T_record* p = records[i];
+		printf("%d. %s\n", i+1, m_to_string(p));
+	}
 }
+
 void search_number()
 {
+	char number[20];
+	printf("Enter a number : ");
+	scanf("%s", number);
 
+	T_record * records[MAX_MEMBERS];
+	int size = m_get_all_by_number(records, number);
+	printf("%d records found,\n", size);
+
+	for (int i=0; i <size; i++)
+	{
+		T_record * p = records[i];
+		printf("%d. %s\n", i+1, m_to_string(p));
+	
+	}
+	
 }
+
 void load_file()
 {
 	printf("All data will be deleted and new records will be reloaded.\n");
@@ -252,8 +346,4 @@ void debug_records()
 		printf("%d - %p\n",i, records[i]);
 	}
 }
-
-
-
-
 
