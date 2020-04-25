@@ -27,42 +27,55 @@ int main(){
             case 1: 
                 create_record();
                 break;
+
             case 2: 
                 read_record();
                 break;
+
             case 3: 
                 update_record();
                 break;
+
             case 4: 
                 delete_record();
                 break;
+
             case 5: 
                 list_record();
                 break;
+
 	   	 	case 6:
 				sort_record();
 				break;
+
 	    	case 7:
 				enrollment_date();	
 				break;
+
 	    	case 8:
 				recent_visit();	
 				break;
+
             case 9: 
                 search_name();
                 break;
+
             case 10: 
                 search_phone();
                 break;
+
             case 11: 
                 load_file();
                 break;
+
             case 12: 
                 save_file();
                 break;
+
             case 13: 
                 debug_records();
                 break;
+
             case 0: 
             default: 
                 return 0;
