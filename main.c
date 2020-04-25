@@ -20,58 +20,46 @@ int main(){
 	m_init();
     int menu;
     while(1){
-        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit > ");
+        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit : ");
         scanf("%d", &menu);
         printf("\n");
         switch(menu){
             case 1: 
                 create_record();
                 break;
-
             case 2: 
                 read_record();
                 break;
-
             case 3: 
                 update_record();
                 break;
-
             case 4: 
                 delete_record();
                 break;
-
             case 5: 
                 list_record();
                 break;
-
 	   	 	case 6:
 				sort_record();
 				break;
-
 	    	case 7:
 				enrollment_date();	
 				break;
-
 	    	case 8:
 				recent_visit();	
 				break;
-
             case 9: 
                 search_name();
                 break;
-
             case 10: 
                 search_phone();
                 break;
-
             case 11: 
                 load_file();
                 break;
-
             case 12: 
                 save_file();
                 break;
-
             case 13: 
                 debug_records();
                 break;
