@@ -8,9 +8,9 @@ void delete_record();
 void list_record();
 void sort_record();
 void enrollment_date();
-void recent_visit(); 
+void recent_visit();
 void search_name();
-void search_number();
+void search_phone();
 void load_file();
 void save_file();
 void debug_records();
@@ -20,7 +20,7 @@ int main(){
 	m_init();
     int menu;
     while(1){
-        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort 7.enrollment date 8.recent visit 9.Search(name) 10.Search(number) 11.load 12.save 0.Quit > ");
+        printf("\nMenu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit > ");
         scanf("%d", &menu);
         printf("\n");
         switch(menu){
@@ -52,7 +52,7 @@ int main(){
                 search_name();
                 break;
             case 10: 
-                search_number();
+                search_phone();
                 break;
             case 11: 
                 load_file();
@@ -81,7 +81,7 @@ void create_record()
 #endif
 	}
 	char name[20], phone[20], city[20];
-	char birthyear[20];
+	char birthyear[20], e_date[20];
 
 	printf("Enter a new member's info.\n");
 	printf("Name : ");
@@ -101,8 +101,51 @@ void create_record()
 	scanf("%s", phone);
 	printf("City : ");
 	scanf("%s", city);
+	printf("Enrollment date (m,d): ");
+	scanf("%s", e_date);
+	
+	char tmp[10];
+	int m,d;
 
-	m_create(name, phone, birthyear, city);
+	m = atoi(e_date);
+	if(9 < m)
+	{
+		strncpy(tmp, e_date+3, 2);
+	}
+	else
+	{
+		strncpy(tmp, e_date+2, 2);
+	}
+	d = atoi(tmp);
+
+	if(m < 1 || 12 < m)
+	{
+		printf("Wrong answer..\n");
+		return;
+	}
+	if(d < 1 || 31 < d)
+	{
+		printf("Wrong answer..\n");
+		return;
+	}
+	else if(m == 4 || m == 6 || m == 9 || m == 11)
+	{
+		if( 30 < d)
+		{
+			printf("Wrong answer..\n");
+			return;
+		}
+	}
+	else if (m ==2)
+	{
+		if( 28 < d)
+		{	
+			printf("Wrong answer..\n");
+			return;
+		}
+	}
+
+	m_create(name, phone, birthyear, city, e_date);
 	
 #ifdef DEBUG
 	printf("\nRecord is created!\n");
@@ -125,7 +168,7 @@ void read_record()
 		 printf("Birth year : %s\n", m_getbirthyear(p));
 		 printf("Phone number : %s\n", m_getphone(p));
 		 printf("City : %s\n", m_getcity(p));
-		 printf("%s's library number is %s\n",m_getname(p), m_getnumber(p));
+		 printf("Enrollment date : %s\n", m_getenrollment_date(p));
 
 #ifdef DEBUG
 		 printf("\nRecord is read!\n");
@@ -139,24 +182,48 @@ void read_record()
 
 void update_record()
 {
+	time_t timer;
+	struct tm *t;
 	char name[20], phone[20], city[20];
 	char year[20];  
+	char s1[20], s2[20];
+	int month, day;
+
+	timer = time(NULL);
+
+	t = localtime(&timer);
 
 	printf("Enter a name : ");
 	scanf("%s", name);
 
 	T_record* p = m_search_by_name(name);
+
 	if(p)
 	{
 		printf("Enter a updated info.\n");
-		printf("Phone : ");
-		scanf("%s", phone);
 		printf("Birth year : ");
 		scanf("%s", year);
+		printf("Phone : ");
+		scanf("%s", phone);
 		printf("City : ");
 		scanf("%s", city);
 
 		m_update(p, phone, year, city);
+
+		month = t->tm_mon+1;
+		day = t->tm_mday;
+
+		sprintf(s1, "%d", month);
+		sprintf(s2, "%d", day);
+
+		strcat(s1, ",");
+		strcat(s1, s2);
+
+		r_create(name, s1);
+
+#ifdef DEBUG
+		 printf("\nRecord is updated!\n");
+#endif		 
 	}
 	else
 	{
@@ -197,6 +264,7 @@ void list_record()
 		printf("%d. %s\n", i+1, m_to_string(p));
 	}
 }
+
 void sort_record()
 {
 	int size = m_count();
@@ -213,39 +281,38 @@ void enrollment_date()
 	scanf("%s", name);
 
 	T_record * p = m_search_by_name(name);
-	
-	printf("%s's enrollment date is %s\n",name,p->enrollment_date);
 
+	if(p){	
+		printf("%s's enrollment date is %s\n",name,p->enrollment_date);
+	}
+	else{
+		printf("No such member!\n");
+	}
 }
+
 void recent_visit()
 {
-	time_t timer;
-	struct tm *t;
-	char name[20], s1[20], s2[20] ;
-	int month, day;
-
-	timer = time(NULL);
-
-	t = localtime(&timer);
+	char name[20];
 
 	printf("Enter a name : ");
 	scanf("%s", name);
 
-	printf("%s's recent visit is %d, %d\n",name,t->tm_mon+1, t->tm_mday);
-	
-	month = t->tm_mon+1;
-	day = t->tm_mday;
+	T_record * p = m_search_by_name(name);
 
-	sprintf(s1, "%d", month);
-	sprintf(s2, "%d", day);
+	if(p)
+	{	
+		printf("%s's recent visit is %s\n",name,p->recent_visit);
+	}
+	else
+	{
+		printf("No such member!\n");
+	}
+}	
 
-	r_create(name, s1);
-
-}
 void search_name()
 {
 	char name[20];
-	printf("Enter a name > ");
+	printf("Enter a name : ");
 	scanf("%s", name);
 
 	T_record* records[MAX_MEMBERS];
@@ -258,15 +325,15 @@ void search_name()
 	}
 }
 
-void search_number()
+void search_phone()
 {
 	char number[20];
-	printf("Enter a number : ");
+	printf("Enter a phone number : ");
 	scanf("%s", number);
 
 	T_record * records[MAX_MEMBERS];
 	int size = m_get_all_by_number(records, number);
-	printf("%d records found,\n", size);
+	printf("%d records found.\n", size);
 
 	for (int i=0; i <size; i++)
 	{
@@ -280,7 +347,7 @@ void search_number()
 void load_file()
 {
 	printf("All data will be deleted and new records will be reloaded.\n");
-	printf("1.Yes 0.No > ");
+	printf("1.Yes 0.No : ");
 	int yesno;
 	scanf("%d", &yesno);
 	if (yesno == 0) return;
@@ -291,15 +358,19 @@ void load_file()
 	printf("file is opened\n");
 #endif
 	char name[20], phone[20], city[20], year[20];  
+	char e_date[20];
+
 	while(!feof(f))
 	{
 		if(!m_is_available()) 
 		{
-			printf("[Load] There is no space!\n");
+			printf("[DEBUG] There is no space!\n");
 			break;
 		}
-		int n = fscanf(f,"%s %s %s %s", name, phone, year, city);
+
+		int n = fscanf(f,"%s %s %s %s %s", name, phone, year, city, e_date);
 		if (n<4) break;
+
 		if(m_search_by_name(name))
 		{
 #ifdef DEBUG			
@@ -307,7 +378,7 @@ void load_file()
 			continue;
 #endif
 		}
-		m_create(name, phone, year, city);
+		m_create(name, phone, year, city, e_date);
 #ifdef DEBUG
 		printf("[DEBUG] load %s\n", name);
 #endif
@@ -315,12 +386,13 @@ void load_file()
 	printf("%d records are read from file!\n", m_count());    
 	fclose(f);
 }
+
 void save_file()
 {
 	// save data file
 	FILE* f = fopen("lib_members.txt", "w");
 #ifdef DEBUG
-		printf("file is opened\n");
+		printf("[DEBUG] file is opened\n");
 #endif
 	int size = m_count();
 	T_record* records[MAX_MEMBERS];
@@ -330,8 +402,11 @@ void save_file()
 		T_record* p = records[i];
 		fprintf(f,"%s\n", m_to_string_save(p));
 	}
+
+	printf("All records are saved in file\n");
+
 #ifdef DEBUG
-	printf("[DEBUG] All records are written in file\n");
+		printf("[DEBUG] file is closed\n");
 #endif
 	fclose(f);
 }

@@ -52,15 +52,12 @@ void sort(int size)
 
 	for(int i=0; i<size; i++)
 	{
-		printf("[%d] %s\n",i+1,lib_members[i]->name);		
+		printf("[%d] %s/ %s/ %s/ %s/ %s\n",i+1,lib_members[i]->name, lib_members[i]->phone, lib_members[i]->birthyear, lib_members[i]->city, lib_members[i]->enrollment_date);		
 	
 	}
-
-
-
 }
 
-void m_create(char *n, char *p, char *b, char *c)
+void m_create(char *n, char *p, char *b, char *c, char *e)
 {
 	int index = m_first_available();
 	lib_members[index] = (T_record * )malloc(sizeof(T_record));
@@ -70,39 +67,10 @@ void m_create(char *n, char *p, char *b, char *c)
 	strcpy(ptr->phone, p);
 	strcpy(ptr->birthyear, b);
 	strcpy(ptr->city, c);
-	
-	number_create(ptr);
-
-	e_create(ptr);
+	strcpy(ptr->enrollment_date, e);
+	strcpy(ptr->recent_visit, e);	
 
 	count += 1;
-
-}
-
-void e_create(T_record * p)
-{
-
-	time_t timer;
-	struct tm *t;
-
-	timer = time(NULL);
-
-	t = localtime(&timer);
-
-	int month = t->tm_mon +1;
-	int day = t->tm_mday;
-	char s1 [20];
-	char s2 [20];
-
-	sprintf(s1, "%d", month);
-	sprintf(s2, "%d", day);
-
-	strcat(s1, " ");
-	strcat(s1, s2);
-
-	strcpy(p->enrollment_date , s1);
-	strcpy(p->recent_visit, s1);
-
 }
 
 void r_create(char * name, char * r_visit)
@@ -111,13 +79,13 @@ void r_create(char * name, char * r_visit)
 
 	strcpy(p->recent_visit, r_visit);
 
-	printf("recent visit is updated!\n");
+	printf("%s's recent visit is updated!\n",p->name);
 }
 
 char* m_to_string(T_record* p)
 {
 	static char str[80];
-	sprintf(str, "[%s] %s / %s / %s", p->birthyear, p->name, p->phone, p->city);
+	sprintf(str, "[%s] Birth year: %s / Phone number: %s / City: %s/ Enrollment date: %s",p->name, p->birthyear, p->phone, p->city, p->enrollment_date);
 	return str;
 }
 
@@ -130,21 +98,6 @@ T_record * m_search_by_name(char *n)
 	}
 	
 	return 0x0;
-}
-
-void number_create(T_record * p)
-{
-	char *str  = malloc(sizeof(char) * 20);
-
-	strcpy(str , p->birthyear);
-	strcat(str, p->phone);
-	
-	strcpy(p->number, str);
-
-	free(str);
-#ifdef DEBUG
-	printf("\n*Library number is made*\n");
-#endif
 }
 
 void m_update(T_record* p, char* ph, char* b, char* c)
@@ -208,9 +161,9 @@ char* m_getcity(T_record* p)
 	return p->city;
 }
 
-char* m_getnumber(T_record* p)
+char* m_getenrollment_date(T_record* p)
 {
-	return p->number;
+	return p->enrollment_date;
 }
 
 int m_get_all_by_name(T_record* a[], char* n)
@@ -229,10 +182,12 @@ int m_get_all_by_name(T_record* a[], char* n)
 } 
 
 int m_get_all_by_number(T_record* a[], char* n){
-	// 회원거주도시가 문자열과 일치하는 모든 레코드 포인터의 배열 만들기 
+	// 회원의 핸드폰 번호가 문자열과 일치하는 모든 레코드 포인터의 배열 만들기 
 	int i, c=0;
-	for(i=0; i<MAX_MEMBERS; i++){
-		if(lib_members[i]!=NULL && (strcmp(lib_members[i]->number, n)==0)){
+	for(i=0; i<MAX_MEMBERS; i++)
+	{
+		if(lib_members[i]!=NULL && (strcmp(lib_members[i]->phone, n)==0))
+		{
 			a[c]=lib_members[i];
 			c++;
 		}

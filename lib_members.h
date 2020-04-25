@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_MEMBERS 10
+#define MAX_MEMBERS 100
 
 typedef struct lib_member
 {
@@ -11,19 +11,16 @@ typedef struct lib_member
 	char birthyear[20];
 	char phone[20];
 	char city[20];
-	char number[20];
 	char enrollment_date[20];
 	char recent_visit[20];
 } T_record;
 
 
-int m_is_available();       // 현재 추가할 수 있는 데이터 공간이 있는가?
-int m_first_available();    // 추가할 수 있는 가장 빠른 포인터 배열의 인덱스 찾기
-int m_count();              // 현재 저장된 회원 레코드의 갯수 가져오기
-void m_create(char* n, char* ph, char* b, char* c);   // 회원정보로 신규 회원 레코드 추가
-void number_create(T_record * p); //library number can be created 
-void e_create(T_record *p); // enrollment date can be made
-void sort(int size); //sort
+int m_is_available();       // chech if there is a space for new member
+int m_first_available();    // return the first pointer which has index of an array
+int m_count();              // return count
+void m_create(char* n, char* ph, char* b, char* c, char* e);   // create new member
+void sort(int size); //sort by name 
 void r_create(char *n, char * str); //recent visit can be made 
 T_record* m_search_by_name(char* n);                // 이름이 일치하는 회원 레코드 포인터 찾기
 void m_update(T_record* p, char* ph, char* b, char* c);  // 특정 회원 레코드의 정보 업데이트
@@ -35,9 +32,9 @@ char* m_getname(T_record* p);   // 특정 회원 레코드의 회원이름 가�
 char* m_getphone(T_record* p);  // 특정 회원 레코드의 회원전화번호 가져오기
 char* m_getbirthyear(T_record* p);// 특정 회원 레코드의 회원생년 가져오기
 char* m_getcity(T_record* p);// 특정 회원 레코드의 회원거주도시 가져오기
-char* m_getnumber(T_record* p);
+char* m_getenrollment_date(T_record* p); //get enrollment date
 int m_get_all_by_name(T_record* a[], char* n);  // 회원이름에 문자열이 포함된 모든 레코드 포인터의 배열 만들기
-int m_get_all_by_number(T_record * a[], char * n);
+int m_get_all_by_number(T_record * a[], char * n); //find member who has a certain phone number
 int m_get_all_by_city(T_record* a[], char* n);  // 회원거주도시가 문자열과 일치하는 모든 레코드 포인터의 배열 만들기 
 void m_init(); // 모든 레코드 제거
 char* m_to_string_save(T_record* p); // 특정 회원 레코드의 내용을 파일저장용 문자열로 가져오기
