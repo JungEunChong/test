@@ -259,9 +259,13 @@ void list_record()
 #endif
 	
 	printf("All records.\n");
-	for(int i=0; i<size; i++)
+	for(int i=0; i<size ; i++)
 	{
 		T_record* p = records[i];
+
+		if(p == NULL)
+			continue;
+
 		printf("%d. %s\n", i+1, m_to_string(p));
 	}
 }

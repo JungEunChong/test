@@ -109,25 +109,38 @@ void m_update(T_record* p, char* ph, char* b, char* c)
 
 void m_delete(T_record* p)
 {
-	int i, index;
+	int i, index=0;
 	for(i=0; i<MAX_MEMBERS; i++)
+	{
 		if(lib_members[i]==p)
 		{
 			index=i;
 			break;
 		}
+	}
 	free(p);
 	lib_members[index] = NULL;
+
+	for(int j= index; j<MAX_MEMBERS; j++)
+	{
+		lib_members[index] = lib_members[index+1];
+	}
+
 	count--;
 }
 
 
 void m_get_all(T_record * a[])
 {
-	int i;
+	int i, c=0;
+
 	for (i = 0; i < MAX_MEMBERS; i++)
 	{
-		a[i] = lib_members[i];
+		if(lib_members[i]!= NULL)
+		{
+			a[i] = lib_members[i];
+			c++;
+		}
 	}
 }
 
@@ -212,7 +225,7 @@ void m_init()
 
 char* m_to_string_save(T_record* p)
 {
-	static char str[80];
+	static char str[100];
 	sprintf(str, "%s %s %s %s", p->name, p->phone, p->birthyear, p->city);
 	return str;
 }
