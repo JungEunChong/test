@@ -1,0 +1,17 @@
+ll data will be deleted and new records will be reloaded.
+1.Yes 0.No : 1
+51 records are read from file!
+
+Menu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit : 1
+
+Enter a new member's info.
+Name : a
+Birth year : 1
+Phone number : a
+City : a
+Enrollment date (m,d): 1,1
+
+Menu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit : 12
+
+All records are saved in file
+
