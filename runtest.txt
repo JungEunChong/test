@@ -1,0 +1,26 @@
+ new member's info.
+Name : a
+Birth year : 1
+Phone number : a
+City : a
+Enrollment date (m,d): 1,1
+
+Menu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit : 3
+
+Enter a name : a
+Enter a updated info.
+Birth year : 2
+Phone : a
+City : a
+a's recent visit is updated!
+
+Menu : 1.Create 2.Read 3.Update 4.Delete 5.List 6.Sort(name) 7.enrollment date 8.recent visit 9.Search(name) 10.Search(phone) 11.load 12.save 0.Quit : 2
+
+Enter a name : a
+a's info.
+Name : a
+Birth year : 2
+Phone number : a
+City : a
+Enrollment date : 1,1
+
